@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="model"
+            type="com.hour24.calendarrangeselect.model.ModelDate" />
+
+        <variable
+            name="style"
+            type="com.hour24.calendarrangeselect.model.ModelDate.Style" />
+
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="@{model.style == style.EMPTY ? View.GONE : View.VISIBLE}">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{String.valueOf(model.date)}" />
+
+    </LinearLayout>
+</layout>

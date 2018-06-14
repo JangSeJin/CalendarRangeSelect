@@ -6,61 +6,21 @@
 
         <variable
             name="model"
-            type="com.hour24.calendarrangeselect.model.ModelDay" />
+            type="com.hour24.calendarrangeselect.model.ModelDate" />
 
 
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/back_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\u003c" />
-
-            <TextView
-                android:id="@+id/current_month"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@{@string/main_current_month(model.year, (model.month + 1))}" />
-
-            <Button
-                android:id="@+id/next_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\u003e" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <!-- sun ~ sat -->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/day_week_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <!-- day -->
-            <android.support.v4.view.ViewPager
-                android:id="@+id/day_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,15 +28,60 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/start_day"
+                <Button
+                    android:id="@+id/back_month"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="\u003c" />
 
                 <TextView
-                    android:id="@+id/end_day"
+                    android:id="@+id/current_month"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{@string/main_current_month(model.year, (model.month + 1))}" />
+
+                <Button
+                    android:id="@+id/next_month"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\u003e" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- sun ~ sat -->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/day_week_recyclerview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <!-- day -->
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/date_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/started_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/finished_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
