@@ -28,6 +28,8 @@ public class ModelDate implements Serializable {
     public boolean isStarted;
     public boolean isFinished;
 
+    public String textColor;
+
     public ModelDate() {
 
     }

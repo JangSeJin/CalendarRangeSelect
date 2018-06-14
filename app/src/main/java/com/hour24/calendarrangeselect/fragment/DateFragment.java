@@ -48,7 +48,6 @@ public class DateFragment extends Fragment {
 
     }
 
-
     public void getDate() {
         try {
             if (getArguments() != null) {
@@ -68,9 +67,7 @@ public class DateFragment extends Fragment {
     }
 
     public void initVariable() {
-
         mDateAdapter = new DateAdapter(mContext, mDate);
         mDateRecyclerView.setAdapter(mDateAdapter);
-
     }
 }

@@ -21,6 +21,7 @@ import com.hour24.calendarrangeselect.adapter.DayWeekAdapter;
 import com.hour24.calendarrangeselect.databinding.ActivityMainBinding;
 import com.hour24.calendarrangeselect.model.ModelDate;
 import com.hour24.calendarrangeselect.model.ModelDayWeek;
+import com.hour24.calendarrangeselect.widget.WrapContentHeightViewPager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private TextView mStartDate;
     private TextView mFinishedDate;
     private RecyclerView mDayWeekRecyclerView;
-    private ViewPager mDateViewPager;
+    private WrapContentHeightViewPager mDateViewPager;
 
     // Adapter
     private DayWeekAdapter mDayWeekAdapter;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         mStartDate = (TextView) findViewById(R.id.started_date); // 시작일
         mFinishedDate = (TextView) findViewById(R.id.finished_date); // 종료일
         mDayWeekRecyclerView = (RecyclerView) findViewById(R.id.day_week_recyclerview); // 일요일 ~ 토요일
-        mDateViewPager = (ViewPager) findViewById(R.id.date_viewpager); // 달력
+        mDateViewPager = (WrapContentHeightViewPager) findViewById(R.id.date_viewpager); // 달력
 
         mDayWeekRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 7));
         mDayWeekRecyclerView.setItemAnimator((new DefaultItemAnimator()));
@@ -151,14 +152,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         for (int i = 0; i < mMonthCount; i++) {
 
             // 년, 월 세팅
-            ModelDate month = new ModelDate();
-            month.setYear(calendar.get(Calendar.YEAR));
-            month.setMonth(calendar.get(Calendar.MONTH));
-
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
             int startDate = calendar.get(Calendar.DAY_OF_WEEK);
-            month.setStartDayOfWeek(startDate); // 1일 시작 요일
 
-            //  시작 일 만큼 공백 만들어줌
+            ModelDate model = new ModelDate();
+            model.setYear(calendar.get(Calendar.YEAR));
+            model.setMonth(calendar.get(Calendar.MONTH));
+            model.setStartDayOfWeek(startDate); // 1일 시작 요일
+
+            // 시작 일 만큼 공백 만들어줌
             ArrayList<ModelDate> dateList = new ArrayList<>();
             for (int j = 0; j < startDate - 1; j++) {
                 dateList.add(j, new ModelDate(ModelDate.Style.EMPTY));
@@ -169,17 +172,30 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             for (int j = 1; j <= lastDate; j++) {
 
                 // 일
+                Calendar calendarDate = Calendar.getInstance(Locale.KOREA);
+                calendarDate.set(year, month, j);
+
                 ModelDate date = new ModelDate();
-                date.setDate(j);
+                date.setDate(calendarDate.get(Calendar.DATE));
+
+                // 일요일 : #ff0000
+                // 토요일 : #0000ff
+                if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                    date.setTextColor("#ff0000");
+                } else if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                    date.setTextColor("#0000ff");
+                } else {
+                    date.setTextColor("#000000");
+                }
 
                 // Add Array List
                 dateList.add(date);
 
             }
-            month.setDateList(dateList);
+            model.setDateList(dateList);
 
             // Add Array List
-            monthList.add(month);
+            monthList.add(model);
 
             // 다음달
             calendar.add(Calendar.MONTH, 1);
