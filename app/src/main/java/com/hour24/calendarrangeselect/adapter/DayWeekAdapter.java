@@ -47,7 +47,6 @@ public class DayWeekAdapter extends RecyclerView.Adapter<DayWeekAdapter.ViewHold
         try {
 
             ModelDayWeek item = mDayWeekList.get(position);
-            Log.e("sjjang", item.getDayWeek());
             holder.getBinding().setVariable(BR.model, item);
             holder.getBinding().executePendingBindings();
 
