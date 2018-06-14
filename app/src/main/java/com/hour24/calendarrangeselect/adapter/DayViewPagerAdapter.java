@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.hour24.calendarrangeselect.fragment.CalendarFragment;
-import com.hour24.calendarrangeselect.model.ModelCalendar;
+import com.hour24.calendarrangeselect.model.ModelDay;
 
 import java.util.ArrayList;
 
@@ -14,11 +14,11 @@ import java.util.ArrayList;
  * Created by N16326 on 2018. 6. 1..
  */
 
-public class CalendarViewPagerAdapter extends FragmentPagerAdapter {
+public class DayViewPagerAdapter extends FragmentPagerAdapter {
 
-    private ArrayList<ModelCalendar> mCalendarList;
+    private ArrayList<ModelDay> mCalendarList;
 
-    public CalendarViewPagerAdapter(FragmentManager fragmentManager, ArrayList<ModelCalendar> calendarList) {
+    public DayViewPagerAdapter(FragmentManager fragmentManager, ArrayList<ModelDay> calendarList) {
         super(fragmentManager);
         this.mCalendarList = calendarList;
     }
@@ -31,10 +31,10 @@ public class CalendarViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        ModelCalendar calendar = mCalendarList.get(position);
+        ModelDay calendar = mCalendarList.get(position);
 
         Bundle args = new Bundle();
-        args.putSerializable(ModelCalendar.class.getSimpleName(), calendar);
+        args.putSerializable(ModelDay.class.getSimpleName(), calendar);
 
         Fragment fragment = new CalendarFragment();
         fragment.setArguments(args);

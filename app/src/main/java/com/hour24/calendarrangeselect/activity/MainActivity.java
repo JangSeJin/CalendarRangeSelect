@@ -14,10 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hour24.calendarrangeselect.R;
-import com.hour24.calendarrangeselect.adapter.CalendarViewPagerAdapter;
+import com.hour24.calendarrangeselect.adapter.DayViewPagerAdapter;
 import com.hour24.calendarrangeselect.adapter.DayWeekAdapter;
 import com.hour24.calendarrangeselect.databinding.ActivityMainBinding;
-import com.hour24.calendarrangeselect.model.ModelCalendar;
+import com.hour24.calendarrangeselect.model.ModelDay;
 import com.hour24.calendarrangeselect.model.ModelDayWeek;
 
 import java.util.ArrayList;
@@ -36,14 +36,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private TextView mStartDay;
     private TextView mEndDay;
     private RecyclerView mDayWeekRecyclerView;
-    private ViewPager mCalendarViewPager;
+    private ViewPager mDayViewPager;
 
     // Adapter
     private DayWeekAdapter mDayWeekAdapter;
-    private CalendarViewPagerAdapter mCalendarViewPagerAdapter;
+    private DayViewPagerAdapter mCalendarViewPagerAdapter;
 
-    private ArrayList<ModelCalendar> mCalendarList;
-    private int mMonthCount = 1 * 12; // 10년(120개월)
+    private ArrayList<ModelDay> mDayList;
+    private int mMonthCount = 10 * 12; // 10년(120개월)
     private int mCurrentPosition = 0; // view page
 
     @Override
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         mStartDay = (TextView) findViewById(R.id.start_day); // 시작일
         mEndDay = (TextView) findViewById(R.id.end_day); // 종료일
         mDayWeekRecyclerView = (RecyclerView) findViewById(R.id.day_week_recyclerview); // 일요일 ~ 토요일
-        mCalendarViewPager = (ViewPager) findViewById(R.id.calendar_viewpager); // 달력
+        mDayViewPager = (ViewPager) findViewById(R.id.day_viewpager); // 달력
 
         mDayWeekRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 7));
         mDayWeekRecyclerView.setItemAnimator((new DefaultItemAnimator()));
@@ -86,15 +86,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         // day
         // dayList 를 현재 월 기준 120개월 만들어 View Pager 삽입 (10년)
-        mCalendarList = getCalendarList();
-        mCalendarViewPagerAdapter = new CalendarViewPagerAdapter(getSupportFragmentManager(), mCalendarList);
-        mCalendarViewPager.setAdapter(mCalendarViewPagerAdapter);
+        mDayList = getDayList();
+        mCalendarViewPagerAdapter = new DayViewPagerAdapter(getSupportFragmentManager(), mDayList);
+        mDayViewPager.setAdapter(mCalendarViewPagerAdapter);
 
     }
 
     private void initEventListener() {
         // view page scroll
-        mCalendarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mDayViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
-                mBinding.setModel(mCalendarList.get(position));
+                mBinding.setModel(mDayList.get(position));
             }
 
             @Override
@@ -118,13 +118,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         switch (view.getId()) {
             case R.id.back_month: // 이전달
                 if (mCurrentPosition > 0) {
-                    mCalendarViewPager.setCurrentItem(mCurrentPosition - 1, true);
+                    mDayViewPager.setCurrentItem(mCurrentPosition - 1, true);
                 }
                 break;
 
             case R.id.next_month: // 다음달
-                if (mCalendarList.size() > mCurrentPosition) {
-                    mCalendarViewPager.setCurrentItem(mCurrentPosition + 1, true);
+                if (mDayList.size() > mCurrentPosition) {
+                    mDayViewPager.setCurrentItem(mCurrentPosition + 1, true);
                 }
                 break;
 
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         }
     }
 
-    public ArrayList<ModelCalendar> getCalendarList() {
+    public ArrayList<ModelDay> getDayList() {
 
         // 1. 현재월 구함
         // 2. 현재월 기준 120개월 세팅 (10년)
@@ -145,14 +145,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         calendar.set(curYear, curMonth, 1);
 
         // View Pager 를 세팅하기 위한 작업
-        ArrayList<ModelCalendar> calendarList = new ArrayList<>();
+        ArrayList<ModelDay> calendarList = new ArrayList<>();
         for (int i = 0; i < mMonthCount; i++) {
 
-            ModelCalendar modelCalendar = new ModelCalendar();
-            modelCalendar.setYear(calendar.get(Calendar.YEAR));
-            modelCalendar.setMonth(calendar.get(Calendar.MONTH));
-            modelCalendar.setStartDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)); // 1일 시작 요일
-            calendarList.add(modelCalendar);
+            ModelDay day = new ModelDay();
+            day.setYear(calendar.get(Calendar.YEAR));
+            day.setMonth(calendar.get(Calendar.MONTH));
+            day.setStartDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)); // 1일 시작 요일
+            calendarList.add(day);
 
             // 다음달
             calendar.add(Calendar.MONTH, 1);

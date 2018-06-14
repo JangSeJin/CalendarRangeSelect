@@ -9,7 +9,7 @@ import lombok.Data;
  */
 
 @Data
-public class ModelCalendar implements Serializable {
+public class ModelDay implements Serializable {
     public int year;
     public int month;
     public int day;

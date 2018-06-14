@@ -7,10 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.hour24.calendarrangeselect.R;
-import com.hour24.calendarrangeselect.model.ModelCalendar;
+import com.hour24.calendarrangeselect.model.ModelDay;
 
 
 public class CalendarFragment extends Fragment {
@@ -39,9 +38,9 @@ public class CalendarFragment extends Fragment {
     public void getViewCode() {
         try {
             if (getArguments() != null) {
-                ModelCalendar calendar = (ModelCalendar) getArguments().getSerializable(ModelCalendar.class.getSimpleName());
-                Log.d(TAG, "year : " + calendar.getYear());
-                Log.d(TAG, "month : " + (calendar.getMonth() + 1));
+                ModelDay day = (ModelDay) getArguments().getSerializable(ModelDay.class.getSimpleName());
+                Log.d(TAG, "year : " + day.getYear());
+                Log.d(TAG, "month : " + (day.getMonth() + 1));
             }
         } catch (Exception e) {
             e.printStackTrace();

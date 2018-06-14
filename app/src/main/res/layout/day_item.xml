@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="com.hour24.calendarrangeselect.model.ModelDay" />
+            type="com.hour24.calendarrangeselect.model.ModelDayWeek" />
 
 
     </data>
@@ -17,10 +17,13 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/calendar_recyclerview"
+        <TextView
+            android:id="@+id/day_week"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{model.dayWeek}"
+            bind:textColor="@{model.textColor}" />
 
     </LinearLayout>
 </layout>
