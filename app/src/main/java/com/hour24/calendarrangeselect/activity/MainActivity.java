@@ -157,14 +157,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             int startDate = calendar.get(Calendar.DAY_OF_WEEK);
 
             ModelDate model = new ModelDate();
-            model.setYear(calendar.get(Calendar.YEAR));
-            model.setMonth(calendar.get(Calendar.MONTH));
+            model.setYear(year);
+            model.setMonth(month);
             model.setStartDayOfWeek(startDate); // 1일 시작 요일
 
             // 시작 일 만큼 공백 만들어줌
             ArrayList<ModelDate> dateList = new ArrayList<>();
             for (int j = 0; j < startDate - 1; j++) {
-                dateList.add(j, new ModelDate(ModelDate.Style.EMPTY));
+//                dateList.add(j, new ModelDate(ModelDate.Style.EMPTY));
             }
 
             // 일 세팅
@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
                 ModelDate date = new ModelDate();
                 date.setDate(calendarDate.get(Calendar.DATE));
+                date.setStyle(ModelDate.Style.NORMALITY);
 
                 // 일요일 : #ff0000
                 // 토요일 : #0000ff

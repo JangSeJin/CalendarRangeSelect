@@ -17,7 +17,7 @@ public class ModelDate implements Serializable {
         public int NORMALITY = 1002;
     }
 
-    public int style = Style.NORMALITY;
+    public int style = Style.EMPTY;
     public int year;
     public int month;
     public int date = 0;
