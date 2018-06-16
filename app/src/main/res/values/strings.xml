@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CalendarRangeSelect</string>
+
+    <string name="main_current_month" formatted="false">%s년 %s월</string>
 </resources>

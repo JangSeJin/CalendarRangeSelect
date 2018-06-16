@@ -1,10 +1,8 @@
 package com.hour24.calendarrangeselect.adapter;
 
 import android.content.Context;
-
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.hour24.calendarrangeselect.BR;
 import com.hour24.calendarrangeselect.R;
-import com.hour24.calendarrangeselect.model.ModelDayWeek;
+import com.hour24.calendarrangeselect.model.ModelDate;
 
 import java.util.ArrayList;
 
@@ -21,24 +19,27 @@ import java.util.ArrayList;
  * Created by N16326 on 2018. 6. 7..
  */
 
-public class DayWeekAdapter extends RecyclerView.Adapter<DayWeekAdapter.ViewHolder> {
+public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<ModelDayWeek> mDayWeekList;
+    private ModelDate mDate;
+    private ArrayList<ModelDate> mDateList;
 
-    public DayWeekAdapter(Context context, ArrayList<ModelDayWeek> dayWeekList) {
+    public DateAdapter(Context context, ModelDate date) {
         this.mContext = context;
-        this.mDayWeekList = dayWeekList;
+        this.mDate = date;
+        this.mDateList = date.getDateList();
     }
 
     @Override
     public int getItemCount() {
-        return mDayWeekList.size();
+        // 일 + 시작일 == 전체 아이템 갯수
+        return mDateList.size() + (mDate.getStartDayOfWeek() - 1);
     }
 
     @Override
-    public DayWeekAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.day_week_item, parent, false).getRoot();
+    public DateAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.date_item, parent, false).getRoot();
         return new ViewHolder(view);
     }
 
@@ -46,7 +47,14 @@ public class DayWeekAdapter extends RecyclerView.Adapter<DayWeekAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         try {
 
-            ModelDayWeek item = mDayWeekList.get(position);
+            // 의미없는 빈공간을 주기 위해 아래 구문을 실시
+            ModelDate item;
+            if (position < (mDate.getStartDayOfWeek() - 1)) {
+                item = new ModelDate();
+            } else {
+                item = mDateList.get(position - (mDate.getStartDayOfWeek() - 1));
+            }
+
             holder.getBinding().setVariable(BR.model, item);
             holder.getBinding().executePendingBindings();
 
