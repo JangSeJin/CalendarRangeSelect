@@ -17,6 +17,9 @@ public class Utils {
     @BindingAdapter({"textColor"})
     public static void setTextColor(TextView view, String color) {
         try {
+            if(color==null){
+                return;
+            }
             view.setTextColor(Color.parseColor(color));
         } catch (Exception e) {
             e.printStackTrace();

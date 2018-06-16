@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             // 시작 일 만큼 공백 만들어줌
             ArrayList<ModelDate> dateList = new ArrayList<>();
             for (int j = 0; j < startDate - 1; j++) {
-//                dateList.add(j, new ModelDate(ModelDate.Style.EMPTY));
+                dateList.add(j, new ModelDate(ModelDate.Style.EMPTY));
             }
 
             // 일 세팅
