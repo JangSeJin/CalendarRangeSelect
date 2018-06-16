@@ -6,6 +6,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.hour24.calendarrangeselect.model.ModelDate.Style" />
+
         <variable
             name="model"
             type="com.hour24.calendarrangeselect.model.ModelDate" />
@@ -14,24 +16,24 @@
             name="style"
             type="com.hour24.calendarrangeselect.model.ModelDate.Style" />
 
-
     </data>
 
     <LinearLayout
         android:id="@+id/date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="3dp"
+        android:background="@drawable/selector_circle"
+        android:clickable="@{model.style == Style.TODAY_BEFORE ? false : true}"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="@{model.style == style.EMPTY ? View.GONE : View.VISIBLE}">
+        android:visibility="@{model.style == Style.EMPTY ? View.GONE : View.VISIBLE}">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="@{String.valueOf(model.date)}"
             bind:textColor="@{model.textColor}" />
-
     </LinearLayout>
 </layout>

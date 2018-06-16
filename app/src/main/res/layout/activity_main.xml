@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="model"
             type="com.hour24.calendarrangeselect.model.ModelDate" />
@@ -13,22 +15,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#ffffff"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
             android:gravity="center"
             android:orientation="horizontal">
 
             <!-- 이전달 -->
-            <Button
+            <ImageView
                 android:id="@+id/back_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\u003c" />
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/selector_circle"
+                android:src="@drawable/ic_back" />
 
             <!-- 현재월 -->
             <TextView
@@ -43,11 +48,13 @@
                 android:textStyle="bold" />
 
             <!-- 다음달 -->
-            <Button
+            <ImageView
                 android:id="@+id/next_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\u003e" />
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/selector_circle"
+                android:src="@drawable/ic_next" />
         </LinearLayout>
 
         <LinearLayout

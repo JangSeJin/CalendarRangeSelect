@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hour24.calendarrangeselect.R;
@@ -21,10 +22,13 @@ import com.hour24.calendarrangeselect.adapter.DayWeekAdapter;
 import com.hour24.calendarrangeselect.databinding.ActivityMainBinding;
 import com.hour24.calendarrangeselect.model.ModelDate;
 import com.hour24.calendarrangeselect.model.ModelDayWeek;
+import com.hour24.calendarrangeselect.util.Utils;
 import com.hour24.calendarrangeselect.widget.WrapContentHeightViewPager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
@@ -33,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private ActivityMainBinding mBinding;
 
     // Views
-    private Button mBackMonth;
-    private Button mNextMonth;
+    private ImageView mBackMonth;
+    private ImageView mNextMonth;
     private TextView mCurrentMonth;
     private TextView mStartDate;
     private TextView mFinishedDate;
@@ -63,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private void initLayout() {
 
-        mBackMonth = (Button) findViewById(R.id.back_month); // 이전달
-        mNextMonth = (Button) findViewById(R.id.next_month); // 다음달
+        mBackMonth = (ImageView) findViewById(R.id.back_month); // 이전달
+        mNextMonth = (ImageView) findViewById(R.id.next_month); // 다음달
         mCurrentMonth = (TextView) findViewById(R.id.current_month); // 현재달
         mStartDate = (TextView) findViewById(R.id.started_date); // 시작일
         mFinishedDate = (TextView) findViewById(R.id.finished_date); // 종료일
@@ -145,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         Calendar calendar = Calendar.getInstance(Locale.KOREA);
         int curYear = calendar.get(Calendar.YEAR);
         int curMonth = calendar.get(Calendar.MONTH);
+        int curDate = calendar.get(Calendar.DATE);
         calendar.set(curYear, curMonth, 1);
 
         // View Pager 를 세팅하기 위한 작업
@@ -157,16 +162,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             int startDate = calendar.get(Calendar.DAY_OF_WEEK);
 
             ModelDate model = new ModelDate();
+
+            model.setCurYear(curYear);
+            model.setCurMonth(curMonth);
+            model.setCurDate(curDate);
+
             model.setYear(year);
             model.setMonth(month);
             model.setStartDayOfWeek(startDate); // 1일 시작 요일
 
-            // 시작 일 만큼 공백 만들어줌
             ArrayList<ModelDate> dateList = new ArrayList<>();
-            for (int j = 0; j < startDate - 1; j++) {
-                dateList.add(j, new ModelDate(ModelDate.Style.EMPTY));
-            }
-
             // 일 세팅
             int lastDate = calendar.getActualMaximum(Calendar.DATE);
             for (int j = 1; j <= lastDate; j++) {
@@ -177,16 +182,26 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
                 ModelDate date = new ModelDate();
                 date.setDate(calendarDate.get(Calendar.DATE));
-                date.setStyle(ModelDate.Style.NORMALITY);
+
+                // 오늘 날짜보다 앞 날짜 비교
+                if (getCompareToDate(curYear + "-" + curMonth + "-" + curDate, year + "-" + month + "-" + j) > 0) {
+                    date.setStyle(ModelDate.Style.TODAY_BEFORE);
+                } else {
+                    date.setStyle(ModelDate.Style.NORMALITY);
+                }
 
                 // 일요일 : #ff0000
                 // 토요일 : #0000ff
-                if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                    date.setTextColor("#ff0000");
-                } else if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                    date.setTextColor("#0000ff");
+                if (date.getStyle() == ModelDate.Style.TODAY_BEFORE) {
+                    date.setTextColor("#8c8c8c");
                 } else {
-                    date.setTextColor("#000000");
+                    if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                        date.setTextColor("#ff0000");
+                    } else if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                        date.setTextColor("#0000ff");
+                    } else {
+                        date.setTextColor("#000000");
+                    }
                 }
 
                 // Add Array List
@@ -206,5 +221,21 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         mBinding.setModel(monthList.get(0));
 
         return monthList;
+    }
+
+    /**
+     * @author 장세진
+     * @description 날짜비교 0 == 같음, 1 == 큼, -1 == 작음
+     */
+    public int getCompareToDate(String today, String compare) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+            Date todayDate = format.parse(today);
+            Date compareDate = format.parse(compare);
+            return todayDate.compareTo(compareDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

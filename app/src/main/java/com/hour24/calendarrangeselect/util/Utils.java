@@ -4,6 +4,10 @@ import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by N16326 on 2018. 6. 14..
  */
@@ -17,7 +21,7 @@ public class Utils {
     @BindingAdapter({"textColor"})
     public static void setTextColor(TextView view, String color) {
         try {
-            if(color==null){
+            if (color == null) {
                 return;
             }
             view.setTextColor(Color.parseColor(color));

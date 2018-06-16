@@ -15,9 +15,15 @@ public class ModelDate implements Serializable {
     public @interface Style {
         public int EMPTY = 1001;
         public int NORMALITY = 1002;
+        public int TODAY_BEFORE = 1003;
     }
 
     public int style = Style.EMPTY;
+
+    public int curYear;
+    public int curMonth;
+    public int curDate;
+
     public int year;
     public int month;
     public int date = 0;

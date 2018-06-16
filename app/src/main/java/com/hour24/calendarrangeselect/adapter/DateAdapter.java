@@ -34,7 +34,7 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         // 일 + 시작일 == 전체 아이템 갯수
-        return mDateList.size();// + (mDate.getStartDayOfWeek() - 1);
+        return mDateList.size() + (mDate.getStartDayOfWeek() - 1);
     }
 
     @Override
@@ -47,15 +47,14 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         try {
 
-
+            // 의미없는 빈공간을 주기 위해 아래 구문을 실시
             ModelDate item;
-             /*if (position < (mDate.getStartDayOfWeek() - 1)) {
+            if (position < (mDate.getStartDayOfWeek() - 1)) {
                 item = new ModelDate();
             } else {
                 item = mDateList.get(position - (mDate.getStartDayOfWeek() - 1));
-            }*/
+            }
 
-            item = mDateList.get(position);
             holder.getBinding().setVariable(BR.model, item);
             holder.getBinding().executePendingBindings();
 
