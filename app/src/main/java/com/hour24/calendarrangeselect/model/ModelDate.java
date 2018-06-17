@@ -18,7 +18,9 @@ public class ModelDate implements Serializable {
         public int TODAY_BEFORE = 1003;
     }
 
-    public int style = Style.EMPTY;
+    public int index = 0;
+
+    public int style = Style.EMPTY; // default
 
     public int curYear;
     public int curMonth;
@@ -27,12 +29,14 @@ public class ModelDate implements Serializable {
     public int year;
     public int month;
     public int date = 0;
+
     public int startDayOfWeek; // 해당월 첫 시작 요일
     public int lastDate; // 마지막 일
+
     public ArrayList<ModelDate> dateList;
 
-    public boolean isStarted;
-    public boolean isFinished;
+    public boolean isFirstSelected;
+    public boolean isSecondSelected;
 
     public String textColor;
 

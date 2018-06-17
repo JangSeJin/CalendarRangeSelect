@@ -33,6 +33,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
+    private String TAG = MainActivity.class.getSimpleName();
+
     private Context mContext;
     private ActivityMainBinding mBinding;
 
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private ArrayList<ModelDate> mDateList;
     private int mMonthCount = 10 * 12; // 10년(120개월)
     private int mCurrentPosition = 0; // view page
+
+    // 날짜선택 Model
+    private ModelDate firstSelect;
+    private ModelDate secondSelect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +150,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         // 1. 현재월 구함
         // 2. 현재월 기준 120개월 세팅 (10년)
+        // 3. ArrayList 에 데이터를 넣을때 index 도 같이 넣어줌.
+
+        // index
+        int index = 0;
 
         // 기준 년, 월 세팅
         Calendar calendar = Calendar.getInstance(Locale.KOREA);
@@ -163,12 +173,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
             ModelDate model = new ModelDate();
 
-            model.setCurYear(curYear);
-            model.setCurMonth(curMonth);
-            model.setCurDate(curDate);
+            model.setCurYear(curYear); // 현재연도
+            model.setCurMonth(curMonth); // 현재월
+            model.setCurDate(curDate); // 현재일
 
-            model.setYear(year);
-            model.setMonth(month);
+            model.setYear(year); // 달력연도
+            model.setMonth(month); // 달력월
             model.setStartDayOfWeek(startDate); // 1일 시작 요일
 
             ArrayList<ModelDate> dateList = new ArrayList<>();
@@ -181,10 +191,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 calendarDate.set(year, month, j);
 
                 ModelDate date = new ModelDate();
+                date.setYear(calendarDate.get(Calendar.YEAR));
+                date.setMonth(calendarDate.get(Calendar.MONTH));
                 date.setDate(calendarDate.get(Calendar.DATE));
+                date.setIndex(index++);
 
                 // 오늘 날짜보다 앞 날짜 비교
-                if (getCompareToDate(curYear + "-" + curMonth + "-" + curDate, year + "-" + month + "-" + j) > 0) {
+                if (getCompareToDate(String.format("%s-%s-%s", curYear, curMonth, curDate), String.format("%s-%s-%s", year, month, j)) > 0) {
                     date.setStyle(ModelDate.Style.TODAY_BEFORE);
                 } else {
                     date.setStyle(ModelDate.Style.NORMALITY);
@@ -236,6 +249,67 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    // check
+    public void checkRangeDate(ModelDate model) {
+
+        // 1. FirstSelected == false > FirstSelected = true
+        // 2. FirstSelected == true > SecondSelected = true
+        // 3. SecondSelected == true > FirstSelected = true, SecondSelected = false;
+
+        if (firstSelect == null && secondSelect == null) {
+            firstSelect = model;
+        } else if (firstSelect != null && secondSelect == null) {
+            secondSelect = model;
+        } else if (firstSelect != null && secondSelect != null) {
+            firstSelect = model;
+            secondSelect = null;
+        } else {
+            firstSelect = null;
+            secondSelect = null;
+        }
+
+//        if (firstSelect != null) {
+//            Utils.setLogDate("checkRangeDate", firstSelect);
+//        }
+//        if (secondSelect != null) {
+//            Utils.setLogDate("checkRangeDate", secondSelect);
+//        }
+
+        // 위 처리에 따른 Array 초기화
+        int index = 0;
+        for (ModelDate monthModel : mDateList) {
+            for (ModelDate dateModel : monthModel.getDateList()) {
+
+                dateModel.setFirstSelected(false);
+                dateModel.setSecondSelected(false);
+
+                if (firstSelect != null && index == firstSelect.getIndex()) {
+                    dateModel.setFirstSelected(true);
+                }
+
+                if (secondSelect != null && index == secondSelect.getIndex()) {
+                    dateModel.setSecondSelected(true);
+                }
+
+                index++;
+            }
+        }
+
+        // test
+        for (ModelDate monthModel : mDateList) {
+            for (ModelDate dateModel : monthModel.getDateList()) {
+
+                if (firstSelect != null && dateModel.isFirstSelected()) {
+                    Utils.setLogDate("checkRangeDate - isFirstSelected", dateModel);
+                }
+
+                if (secondSelect != null && dateModel.isSecondSelected) {
+                    Utils.setLogDate("checkRangeDate - isSecondSelected", dateModel);
+                }
+            }
         }
     }
 }

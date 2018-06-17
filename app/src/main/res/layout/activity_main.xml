@@ -57,25 +57,31 @@
                 android:src="@drawable/ic_next" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center">
 
             <!-- sun ~ sat -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/day_week_recyclerview"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:layout_marginBottom="10dp" />
 
             <!-- date -->
             <com.hour24.calendarrangeselect.widget.WrapContentHeightViewPager
                 android:id="@+id/date_viewpager"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/day_week_recyclerview"
+                android:layout_alignRight="@id/day_week_recyclerview"
+                android:layout_below="@id/day_week_recyclerview"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <!-- 시작일, 끝난일 -->
         <LinearLayout

@@ -13,27 +13,38 @@
             type="com.hour24.calendarrangeselect.model.ModelDate" />
 
         <variable
+            name="handler"
+            type="com.hour24.calendarrangeselect.adapter.DateAdapter.BindingHandler" />
+
+        <variable
             name="style"
             type="com.hour24.calendarrangeselect.model.ModelDate.Style" />
 
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/date"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="3dp"
         android:background="@drawable/selector_circle"
         android:clickable="@{model.style == Style.TODAY_BEFORE ? false : true}"
         android:gravity="center"
+        android:onClick="@{(v) -> handler.onClick(v, model)}"
         android:orientation="vertical"
         android:visibility="@{model.style == Style.EMPTY ? View.GONE : View.VISIBLE}">
+
+        <!-- selected #3f51b5 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerVertical="true"
             android:gravity="center"
             android:text="@{String.valueOf(model.date)}"
             bind:textColor="@{model.textColor}" />
-    </LinearLayout>
+
+    </RelativeLayout>
 </layout>

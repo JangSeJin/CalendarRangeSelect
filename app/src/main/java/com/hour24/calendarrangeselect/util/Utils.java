@@ -2,7 +2,10 @@ package com.hour24.calendarrangeselect.util;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.TextView;
+
+import com.hour24.calendarrangeselect.model.ModelDate;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,5 +31,36 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static SimpleDateFormat getSimpleDateFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+    }
+
+    /**
+     * @author 장세진
+     * @description 날짜비교 0 == 같음, 1 == 큼, -1 == 작음
+     */
+    public static int getCompareToDate(String today, String compare) {
+        try {
+            SimpleDateFormat format = getSimpleDateFormat();
+            Date todayDate = format.parse(today);
+            Date compareDate = format.parse(compare);
+            return todayDate.compareTo(compareDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * @author 장세진
+     * @description 날짜비교 0 == 같음, 1 == 큼, -1 == 작음
+     */
+    public static void setLogDate(String description, ModelDate model) {
+        int year = model.getYear();
+        int month = model.getMonth();
+        int date = model.getDate();
+        Log.e("sjjang", description + " - " + "index : " + model.getIndex() + " / Date " + String.format("%s-%s-%s", year, month, date));
     }
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.hour24.calendarrangeselect.BR;
 import com.hour24.calendarrangeselect.R;
+import com.hour24.calendarrangeselect.activity.MainActivity;
 import com.hour24.calendarrangeselect.model.ModelDate;
 
 import java.util.ArrayList;
@@ -21,7 +22,11 @@ import java.util.ArrayList;
 
 public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
 
+    private String TAG = DateAdapter.class.getSimpleName();
+
     private Context mContext;
+    private MainActivity mMainActivity;
+
     private ModelDate mDate;
     private ArrayList<ModelDate> mDateList;
 
@@ -29,6 +34,8 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
         this.mContext = context;
         this.mDate = date;
         this.mDateList = date.getDateList();
+
+        mMainActivity = (MainActivity) mContext;
     }
 
     @Override
@@ -56,6 +63,7 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
             }
 
             holder.getBinding().setVariable(BR.model, item);
+            holder.getBinding().setVariable(BR.handler, new BindingHandler());
             holder.getBinding().executePendingBindings();
 
         } catch (Exception e) {
@@ -74,6 +82,23 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
 
         public ViewDataBinding getBinding() {
             return binding;
+        }
+    }
+
+    // Handlers
+    public class BindingHandler {
+
+        // xml 에 정의
+        public void onClick(final View view, ModelDate model) {
+            try {
+                switch (view.getId()) {
+                    case R.id.date:
+                        mMainActivity.checkRangeDate(model);
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
