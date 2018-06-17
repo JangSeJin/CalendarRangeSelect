@@ -258,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         // 1. FirstSelected == false > FirstSelected = true
         // 2. FirstSelected == true > SecondSelected = true
         // 3. SecondSelected == true > FirstSelected = true, SecondSelected = false;
-
         if (firstSelect == null && secondSelect == null) {
             firstSelect = model;
         } else if (firstSelect != null && secondSelect == null) {
@@ -271,42 +270,66 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             secondSelect = null;
         }
 
-//        if (firstSelect != null) {
-//            Utils.setLogDate("checkRangeDate", firstSelect);
-//        }
-//        if (secondSelect != null) {
-//            Utils.setLogDate("checkRangeDate", secondSelect);
-//        }
-
         // 위 처리에 따른 Array 초기화
-        int index = 0;
-        for (ModelDate monthModel : mDateList) {
-            for (ModelDate dateModel : monthModel.getDateList()) {
+        {
+            int index = 0;
+            for (ModelDate monthModel : mDateList) {
+                for (ModelDate dateModel : monthModel.getDateList()) {
 
-                dateModel.setFirstSelected(false);
-                dateModel.setSecondSelected(false);
+                    // 모든값 false 처리
+                    dateModel.setFirstSelected(false);
+                    dateModel.setSecondSelected(false);
 
-                if (firstSelect != null && index == firstSelect.getIndex()) {
-                    dateModel.setFirstSelected(true);
+                    // 선택된 값 true 처리
+                    if (firstSelect != null && index == firstSelect.getIndex()) {
+                        dateModel.setFirstSelected(true);
+                    }
+
+                    if (secondSelect != null && index == secondSelect.getIndex()) {
+                        dateModel.setSecondSelected(true);
+                    }
+
+                    index++;
                 }
+            }
+        }
 
-                if (secondSelect != null && index == secondSelect.getIndex()) {
-                    dateModel.setSecondSelected(true);
+        // 최종 값 처리
+        // 1. model.firstSelect, model.secondSelect 기간 비교
+        // 2. model.firstSelect > model.secondSelect 일 경우 값 변경
+        {
+            if (firstSelect != null && secondSelect != null) {
+                if (firstSelect.getIndex() > secondSelect.getIndex()) {
+                    // Array 에도 값 변경
+                    for (ModelDate monthModel : mDateList) {
+                        for (ModelDate dateModel : monthModel.getDateList()) {
+
+                            // 선택된 순서 변경
+                            if ((firstSelect.getIndex() == dateModel.getIndex()) && dateModel.isFirstSelected()) {
+                                dateModel.setFirstSelected(false);
+                                dateModel.setSecondSelected(true);
+                            }
+
+                            if ((secondSelect.getIndex() == dateModel.getIndex()) && dateModel.isSecondSelected()) {
+                                dateModel.setFirstSelected(true);
+                                dateModel.setSecondSelected(false);
+                            }
+                        }
+                    }
                 }
-
-                index++;
             }
         }
 
         // test
+        Log.e("sjjang", "----------------------------");
         for (ModelDate monthModel : mDateList) {
             for (ModelDate dateModel : monthModel.getDateList()) {
 
-                if (firstSelect != null && dateModel.isFirstSelected()) {
+                if (dateModel.isFirstSelected()) {
                     Utils.setLogDate("checkRangeDate - isFirstSelected", dateModel);
                 }
 
-                if (secondSelect != null && dateModel.isSecondSelected) {
+                if (dateModel.isSecondSelected()) {
                     Utils.setLogDate("checkRangeDate - isSecondSelected", dateModel);
                 }
             }
