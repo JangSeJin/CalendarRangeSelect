@@ -1,5 +1,6 @@
 package com.hour24.calendarrangeselect.activity;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.ColorSpace;
@@ -20,6 +21,7 @@ import com.hour24.calendarrangeselect.R;
 import com.hour24.calendarrangeselect.adapter.DateViewPagerAdapter;
 import com.hour24.calendarrangeselect.adapter.DayWeekAdapter;
 import com.hour24.calendarrangeselect.databinding.ActivityMainBinding;
+import com.hour24.calendarrangeselect.fragment.DateFragment;
 import com.hour24.calendarrangeselect.model.ModelDate;
 import com.hour24.calendarrangeselect.model.ModelDayWeek;
 import com.hour24.calendarrangeselect.util.Utils;
@@ -103,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         mDateViewPagerAdapter = new DateViewPagerAdapter(getSupportFragmentManager(), mDateList);
         mDateViewPager.setAdapter(mDateViewPagerAdapter);
 
+        // 현재 월 세팅
+        mBinding.setModel(mDateList.get(0));
+
     }
 
     private void initEventListener() {
@@ -146,7 +151,61 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         }
     }
 
+    // color 세팅
+    private ModelDate setTextColor(ModelDate date) {
+        // 일요일 : #ff0000
+        // 토요일 : #0000ff
+
+        // 선택된 값
+        //  ㄴ textColor : #ffffff
+        //  ㄴ background : R.drawable.selected_date
+
+        date.setBackground(R.drawable.selector_circle);
+
+        if (date.getStyle() == ModelDate.Style.TODAY_BEFORE) {
+            date.setTextColor("#8c8c8c");
+        } else if (date.isFirstSelected() || date.isSecondSelected()) {
+            date.setTextColor("#ffffff");
+            date.setBackground(R.drawable.selected_date);
+        } else {
+            if (date.getDayOfWeek() == Calendar.SUNDAY) {
+                date.setTextColor("#ff0000");
+            } else if (date.getDayOfWeek() == Calendar.SATURDAY) {
+                date.setTextColor("#0000ff");
+            } else {
+                date.setTextColor("#000000");
+            }
+
+        }
+
+        return date;
+    }
+
+    // fragment updaate
+    private void monthPageUpdate() {
+        // 현재 페이지 좌, 우만 새로고침
+        int startPager = 0;
+        int endPager = 0;
+        if (mCurrentPosition == 0) {
+            // 첫번째 페이지
+            startPager = 0;
+            endPager = 1;
+        } else {
+            startPager = mCurrentPosition - 1;
+            endPager = mCurrentPosition + 1;
+        }
+
+        // 새로고침
+        for (int i = startPager; i <= endPager; i++) {
+            ModelDate dateModel = mDateList.get(i);
+            DateFragment dateFragment = (DateFragment) mDateViewPagerAdapter.getFragment(i);
+            dateFragment.notifyDataSetChanged(dateModel);
+        }
+    }
+
     public ArrayList<ModelDate> getDateList() {
+
+        mDateList = new ArrayList<>();
 
         // 1. 현재월 구함
         // 2. 현재월 기준 120개월 세팅 (10년)
@@ -194,28 +253,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 date.setYear(calendarDate.get(Calendar.YEAR));
                 date.setMonth(calendarDate.get(Calendar.MONTH));
                 date.setDate(calendarDate.get(Calendar.DATE));
+                date.setDayOfWeek(calendarDate.get(Calendar.DAY_OF_WEEK));
                 date.setIndex(index++);
 
                 // 오늘 날짜보다 앞 날짜 비교
-                if (getCompareToDate(String.format("%s-%s-%s", curYear, curMonth, curDate), String.format("%s-%s-%s", year, month, j)) > 0) {
+                if (Utils.getCompareToDate(String.format("%s-%s-%s", curYear, curMonth, curDate), String.format("%s-%s-%s", year, month, j)) > 0) {
                     date.setStyle(ModelDate.Style.TODAY_BEFORE);
                 } else {
                     date.setStyle(ModelDate.Style.NORMALITY);
                 }
 
-                // 일요일 : #ff0000
-                // 토요일 : #0000ff
-                if (date.getStyle() == ModelDate.Style.TODAY_BEFORE) {
-                    date.setTextColor("#8c8c8c");
-                } else {
-                    if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                        date.setTextColor("#ff0000");
-                    } else if (calendarDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                        date.setTextColor("#0000ff");
-                    } else {
-                        date.setTextColor("#000000");
-                    }
-                }
+                // text color
+                setTextColor(date);
 
                 // Add Array List
                 dateList.add(date);
@@ -230,31 +279,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             calendar.add(Calendar.MONTH, 1);
         }
 
-        // 현재 월 세팅
-        mBinding.setModel(monthList.get(0));
-
         return monthList;
     }
 
-    /**
-     * @author 장세진
-     * @description 날짜비교 0 == 같음, 1 == 큼, -1 == 작음
-     */
-    public int getCompareToDate(String today, String compare) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-            Date todayDate = format.parse(today);
-            Date compareDate = format.parse(compare);
-            return todayDate.compareTo(compareDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    // check
+    // By DataAdapter.class
     public void checkRangeDate(ModelDate model) {
 
+        /**
+         * first, second 선택에 따른 구분 처리
+         */
         // 1. FirstSelected == false > FirstSelected = true
         // 2. FirstSelected == true > SecondSelected = true
         // 3. SecondSelected == true > FirstSelected = true, SecondSelected = false;
@@ -270,7 +303,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             secondSelect = null;
         }
 
-        // 위 처리에 따른 Array 초기화
+        /**
+         * 위 처리에 따른 Array 초기화
+         */
         {
             int index = 0;
             for (ModelDate monthModel : mDateList) {
@@ -297,6 +332,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         // 최종 값 처리
         // 1. model.firstSelect, model.secondSelect 기간 비교
         // 2. model.firstSelect > model.secondSelect 일 경우 값 변경
+        /**
+         * 최종 값 처리
+         */
         {
             if (firstSelect != null && secondSelect != null) {
                 if (firstSelect.getIndex() > secondSelect.getIndex()) {
@@ -324,15 +362,25 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         Log.e("sjjang", "----------------------------");
         for (ModelDate monthModel : mDateList) {
             for (ModelDate dateModel : monthModel.getDateList()) {
-
                 if (dateModel.isFirstSelected()) {
-                    Utils.setLogDate("checkRangeDate - isFirstSelected", dateModel);
+                    Utils.setLogDate("start : ", dateModel);
                 }
 
                 if (dateModel.isSecondSelected()) {
-                    Utils.setLogDate("checkRangeDate - isSecondSelected", dateModel);
+                    Utils.setLogDate("finish : ", dateModel);
                 }
             }
         }
+
+        /**
+         * UI 처리
+         */
+        for (ModelDate monthModel : mDateList) {
+            for (ModelDate dateModel : monthModel.getDateList()) {
+                setTextColor(dateModel);
+            }
+        }
+
+        monthPageUpdate();
     }
 }

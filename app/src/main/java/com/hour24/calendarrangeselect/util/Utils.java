@@ -3,8 +3,10 @@ package com.hour24.calendarrangeselect.util;
 import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import com.hour24.calendarrangeselect.R;
 import com.hour24.calendarrangeselect.model.ModelDate;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +30,23 @@ public class Utils {
                 return;
             }
             view.setTextColor(Color.parseColor(color));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @author 장세진
+     * @description Background Color 세팅
+     */
+    @BindingAdapter({"background"})
+    public static void setBackground(View view, Object resource) {
+        try {
+            if (resource instanceof Integer) {
+                view.setBackgroundResource((int) resource);
+            } else if (resource instanceof String) {
+                view.setBackgroundColor(Color.parseColor(String.valueOf(resource)));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

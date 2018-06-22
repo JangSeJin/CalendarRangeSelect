@@ -26,17 +26,12 @@
         android:id="@+id/date"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/selector_circle"
         android:clickable="@{model.style == Style.TODAY_BEFORE ? false : true}"
         android:gravity="center"
         android:onClick="@{(v) -> handler.onClick(v, model)}"
         android:orientation="vertical"
-        android:visibility="@{model.style == Style.EMPTY ? View.GONE : View.VISIBLE}">
-
-        <!-- selected #3f51b5 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:visibility="@{model.style == Style.EMPTY ? View.GONE : View.VISIBLE}"
+        bind:background="@{model.background}">
 
         <TextView
             android:layout_width="match_parent"
@@ -45,6 +40,5 @@
             android:gravity="center"
             android:text="@{String.valueOf(model.date)}"
             bind:textColor="@{model.textColor}" />
-
     </RelativeLayout>
 </layout>

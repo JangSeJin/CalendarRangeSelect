@@ -1,5 +1,7 @@
 package com.hour24.calendarrangeselect.model;
 
+import com.hour24.calendarrangeselect.R;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -29,16 +31,18 @@ public class ModelDate implements Serializable {
     public int year;
     public int month;
     public int date = 0;
+    public int dayOfWeek;
 
     public int startDayOfWeek; // 해당월 첫 시작 요일
     public int lastDate; // 마지막 일
 
     public ArrayList<ModelDate> dateList;
 
-    public boolean isFirstSelected;
-    public boolean isSecondSelected;
+    public boolean isFirstSelected = false;
+    public boolean isSecondSelected = false;
 
     public String textColor;
+    public int background = R.drawable.selector_circle;
 
     public ModelDate() {
 

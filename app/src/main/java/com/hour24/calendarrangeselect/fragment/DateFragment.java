@@ -70,4 +70,11 @@ public class DateFragment extends Fragment {
         mDateAdapter = new DateAdapter(mContext, mDate);
         mDateRecyclerView.setAdapter(mDateAdapter);
     }
+
+    public void notifyDataSetChanged(ModelDate date) {
+        if (mDateAdapter != null) {
+            mDate = date;
+            mDateAdapter.notifyDataSetChanged();
+        }
+    }
 }
