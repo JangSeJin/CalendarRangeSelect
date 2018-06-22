@@ -39,10 +39,11 @@ public class ModelDate implements Serializable {
     public ArrayList<ModelDate> dateList;
 
     public boolean isFirstSelected = false;
+    public boolean isRange = false;
     public boolean isSecondSelected = false;
 
     public String textColor;
-    public int background = R.drawable.selector_circle;
+    public Object background = R.drawable.selector_circle;
 
     public ModelDate() {
 

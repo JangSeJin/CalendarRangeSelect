@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private ArrayList<ModelDate> mDateList;
     private int mMonthCount = 10 * 12; // 10년(120개월)
-    private int mCurrentPosition = 0; // view page
+    private int mCurrentPosition = 0; // view
+    private int mMaxIndex = 0;
 
     // 날짜선택 Model
     private ModelDate firstSelect;
@@ -167,6 +168,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         } else if (date.isFirstSelected() || date.isSecondSelected()) {
             date.setTextColor("#ffffff");
             date.setBackground(R.drawable.selected_date);
+        } else if (date.isRange()) {
+            date.setTextColor("#ffffff");
+            date.setBackground("#703f51b5");
         } else {
             if (date.getDayOfWeek() == Calendar.SUNDAY) {
                 date.setTextColor("#ff0000");
@@ -269,7 +273,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 // Add Array List
                 dateList.add(date);
 
+                // 날짜 갯수
+                mMaxIndex++;
             }
+
             model.setDateList(dateList);
 
             // Add Array List
@@ -314,16 +321,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                     // 모든값 false 처리
                     dateModel.setFirstSelected(false);
                     dateModel.setSecondSelected(false);
+                    dateModel.setRange(false);
 
                     // 선택된 값 true 처리
                     if (firstSelect != null && index == firstSelect.getIndex()) {
                         dateModel.setFirstSelected(true);
                     }
-
                     if (secondSelect != null && index == secondSelect.getIndex()) {
                         dateModel.setSecondSelected(true);
                     }
-
                     index++;
                 }
             }
@@ -335,39 +341,52 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         /**
          * 최종 값 처리
          */
-        {
-            if (firstSelect != null && secondSelect != null) {
-                if (firstSelect.getIndex() > secondSelect.getIndex()) {
-                    // Array 에도 값 변경
-                    for (ModelDate monthModel : mDateList) {
-                        for (ModelDate dateModel : monthModel.getDateList()) {
+        if (firstSelect != null && secondSelect != null) {
+            if (firstSelect.getIndex() > secondSelect.getIndex()) {
+                // Array 에도 값 변경
+                for (ModelDate monthModel : mDateList) {
+                    for (ModelDate dateModel : monthModel.getDateList()) {
 
-                            // 선택된 순서 변경
-                            if ((firstSelect.getIndex() == dateModel.getIndex()) && dateModel.isFirstSelected()) {
-                                dateModel.setFirstSelected(false);
-                                dateModel.setSecondSelected(true);
-                            }
+                        // 선택된 순서 변경
+                        if ((firstSelect.getIndex() == dateModel.getIndex()) && dateModel.isFirstSelected()) {
+                            dateModel.setFirstSelected(false);
+                            dateModel.setSecondSelected(true);
+                        }
 
-                            if ((secondSelect.getIndex() == dateModel.getIndex()) && dateModel.isSecondSelected()) {
-                                dateModel.setFirstSelected(true);
-                                dateModel.setSecondSelected(false);
-                            }
+                        if ((secondSelect.getIndex() == dateModel.getIndex()) && dateModel.isSecondSelected()) {
+                            dateModel.setFirstSelected(true);
+                            dateModel.setSecondSelected(false);
                         }
                     }
                 }
             }
-        }
 
-        // test
-        Log.e("sjjang", "----------------------------");
-        for (ModelDate monthModel : mDateList) {
-            for (ModelDate dateModel : monthModel.getDateList()) {
-                if (dateModel.isFirstSelected()) {
-                    Utils.setLogDate("start : ", dateModel);
-                }
 
-                if (dateModel.isSecondSelected()) {
-                    Utils.setLogDate("finish : ", dateModel);
+            /**
+             * 선택된 값 사이 처리
+             */
+            int index = 0;
+            int firstIndex = -1;
+            int secondIndex = mMaxIndex;
+            for (ModelDate monthModel : mDateList) {
+                for (ModelDate dateModel : monthModel.getDateList()) {
+
+                    // 시작점
+                    if (dateModel.isFirstSelected() && (index == dateModel.getIndex())) {
+                        firstIndex = index;
+                    }
+
+                    // 끝점
+                    if (dateModel.isSecondSelected() && (index == dateModel.getIndex())) {
+                        secondIndex = index;
+                    }
+
+                    // 범위 설정
+                    if ((firstIndex > 0 && firstIndex < index) && index < secondIndex) {
+                        dateModel.setRange(true);
+                    }
+
+                    index++;
                 }
             }
         }
@@ -380,7 +399,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 setTextColor(dateModel);
             }
         }
-
         monthPageUpdate();
     }
 }
