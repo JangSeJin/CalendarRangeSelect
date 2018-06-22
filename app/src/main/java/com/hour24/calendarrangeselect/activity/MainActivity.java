@@ -316,6 +316,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             secondSelect = null;
         }
 
+        // 날짜 세팅
+        mBinding.setStart(firstSelect);
+        mBinding.setFinish(secondSelect);
+
         /**
          * 위 처리에 따른 Array 초기화
          */
@@ -336,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                     if (secondSelect != null && index == secondSelect.getIndex()) {
                         dateModel.setSecondSelected(true);
                     }
+
                     index++;
                 }
             }
@@ -380,11 +385,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                     // 시작점
                     if (dateModel.isFirstSelected() && (index == dateModel.getIndex())) {
                         firstIndex = index;
+
+                        // 날짜 세팅
+                        mBinding.setStart(dateModel);
                     }
 
                     // 끝점
                     if (dateModel.isSecondSelected() && (index == dateModel.getIndex())) {
                         secondIndex = index;
+
+                        // 날짜 세팅
+                        mBinding.setFinish(dateModel);
                     }
 
                     // 범위 설정
