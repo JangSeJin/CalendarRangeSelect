@@ -165,9 +165,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         if (date.getStyle() == ModelDate.Style.TODAY_BEFORE) {
             date.setTextColor("#8c8c8c");
-        } else if (date.isFirstSelected() || date.isSecondSelected()) {
+        } else if (date.isFirstSelected() && date.isSecondSelected()) { // 당일
             date.setTextColor("#ffffff");
             date.setBackground(R.drawable.selected_date);
+        } else if (date.isFirstSelected()) { // 시작
+            date.setTextColor("#ffffff");
+            date.setBackground(R.drawable.selected_date_start);
+        } else if (date.isSecondSelected()) { // 끝
+            date.setTextColor("#ffffff");
+            date.setBackground(R.drawable.selected_date_finish);
         } else if (date.isRange()) {
             date.setTextColor("#ffffff");
             date.setBackground("#703f51b5");
@@ -399,6 +405,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 setTextColor(dateModel);
             }
         }
+
+        // update
         monthPageUpdate();
     }
 }
